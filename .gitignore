@@ -1,0 +1,14 @@
+bin
+obj
+build
+Debug
+Release
+TestResults
+.vs
+*.sdf
+*.opendb
+*.opensdf
+*.user
+*.aps
+ipch
+*.VC.db
