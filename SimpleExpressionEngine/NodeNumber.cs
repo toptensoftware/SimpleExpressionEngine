@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SimpleExpressionEngine
+﻿namespace SimpleExpressionEngine
 {
     // NodeNumber represents a literal number in the expression
     class NodeNumber : Node

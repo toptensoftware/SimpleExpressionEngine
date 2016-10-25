@@ -50,5 +50,24 @@ namespace UnitTests
             // Sequence
             Assert.AreEqual(Parser.Parse("10 + 20 - 40 + 100").Eval(), 90);
         }
+
+        [TestMethod]
+        public void UnaryTest()
+        {
+            // Negative
+            Assert.AreEqual(Parser.Parse("-10").Eval(), -10);
+
+            // Positive
+            Assert.AreEqual(Parser.Parse("+10").Eval(), 10);
+
+            // Negative of a negative
+            Assert.AreEqual(Parser.Parse("--10").Eval(), 10);
+
+            // Woah!
+            Assert.AreEqual(Parser.Parse("--++-+-10").Eval(), 10);
+
+            // All together now
+            Assert.AreEqual(Parser.Parse("10 + -20 - +30").Eval(), -40);
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace SimpleExpressionEngine
         Node ParseAddSubtract()
         {
             // Parse the left hand side
-            var lhs = ParseLeaf();
+            var lhs = ParseUnary();
 
             while (true)
             {
@@ -53,10 +53,42 @@ namespace SimpleExpressionEngine
                 _tokenizer.NextToken();
 
                 // Parse the right hand side of the expression
-                var rhs = ParseLeaf();
+                var rhs = ParseUnary();
 
                 // Create a binary node and use it as the left-hand side from now on
                 lhs = new NodeBinary(lhs, rhs, op);
+            }
+        }
+
+        // Parse a unary operator (eg: negative/positive)
+        Node ParseUnary()
+        {
+            while (true)
+            {
+                // Positive operator is a no-op so just skip it
+                if (_tokenizer.Token == Token.Add)
+                {
+                    // Skip
+                    _tokenizer.NextToken();
+                    continue;
+                }
+
+                // Negative operator
+                if (_tokenizer.Token == Token.Subtract)
+                {
+                    // Skip
+                    _tokenizer.NextToken();
+
+                    // Parse RHS 
+                    // Note this recurses to self to support negative of a negative
+                    var rhs = ParseUnary();
+
+                    // Create unary node
+                    return new NodeUnary(rhs, (a) => -a);
+                }
+
+                // No positive/negative operator so parse a leaf node
+                return ParseLeaf();
             }
         }
 
