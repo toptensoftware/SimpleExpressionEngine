@@ -40,6 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Node.cs" />
+    <Compile Include="NodeBinary.cs" />
+    <Compile Include="NodeNumber.cs" />
+    <Compile Include="Parser.cs" />
+    <Compile Include="SyntaxException.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="Tokenizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

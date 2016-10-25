@@ -37,5 +37,18 @@ namespace UnitTests
             Assert.AreEqual(t.Number, 30.123);
             t.NextToken();
         }
+
+        [TestMethod]
+        public void AddSubtractTest()
+        {
+            // Add 
+            Assert.AreEqual(Parser.Parse("10 + 20").Eval(), 30);
+
+            // Subtract 
+            Assert.AreEqual(Parser.Parse("10 - 20").Eval(), -10);
+
+            // Sequence
+            Assert.AreEqual(Parser.Parse("10 + 20 - 40 + 100").Eval(), 90);
+        }
     }
 }
