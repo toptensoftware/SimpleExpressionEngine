@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace SimpleExpressionEngine
@@ -160,9 +161,49 @@ namespace SimpleExpressionEngine
             // Variable
             if (_tokenizer.Token == Token.Identifier)
             {
-                var node = new NodeVariable(_tokenizer.Identifier);
+                // Capture the name and skip it
+                var name = _tokenizer.Identifier;
                 _tokenizer.NextToken();
-                return node;
+
+                // Parens indicate a function call, otherwise just a variable
+                if (_tokenizer.Token != Token.OpenParens)
+                {
+                    // Variable
+                    return new NodeVariable(name);
+                }
+                else
+                {
+                    // Function call
+
+                    // Skip parens
+                    _tokenizer.NextToken();
+
+                    // Parse arguments
+                    var arguments = new List<Node>();
+                    while (true)
+                    {
+                        // Parse argument and add to list
+                        arguments.Add(ParseAddSubtract());
+
+                        // Is there another argument?
+                        if (_tokenizer.Token == Token.Comma)
+                        {
+                            _tokenizer.NextToken();
+                            continue;
+                        }
+
+                        // Get out
+                        break;
+                    }
+
+                    // Check and skip ')'
+                    if (_tokenizer.Token != Token.CloseParens)
+                        throw new SyntaxException("Missing close parenthesis");
+                    _tokenizer.NextToken();
+
+                    // Create the function call node
+                    return new NodeFunctionCall(name, arguments.ToArray());
+                }
             }
 
             // Don't Understand

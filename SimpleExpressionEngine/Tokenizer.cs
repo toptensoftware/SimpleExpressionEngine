@@ -87,6 +87,11 @@ namespace SimpleExpressionEngine
                     NextChar();
                     _currentToken = Token.CloseParens;
                     return;
+
+                case ',':
+                    NextChar();
+                    _currentToken = Token.Comma;
+                    return;
             }
 
             // Number?

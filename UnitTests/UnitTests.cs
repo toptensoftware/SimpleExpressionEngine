@@ -118,6 +118,11 @@ namespace UnitTests
 
                 throw new InvalidDataException($"Unknown variable: '{name}'");
             }
+
+            public double CallFunction(string name, double[] arguments)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         [TestMethod]
@@ -126,6 +131,41 @@ namespace UnitTests
             var ctx = new MyContext(10);
 
             Assert.AreEqual(Parser.Parse("2 * pi * r").Eval(ctx), 2 * Math.PI * 10);
+        }
+
+        class MyFunctionContext : IContext
+        {
+            public MyFunctionContext()
+            {
+            }
+
+            public double ResolveVariable(string name)
+            {
+                throw new InvalidDataException($"Unknown variable: '{name}'");
+            }
+
+            public double CallFunction(string name, double[] arguments)
+            {
+                if (name == "rectArea")
+                {
+                    return arguments[0] * arguments[1];
+                }
+
+                if (name == "rectPerimeter")
+                {
+                    return (arguments[0] + arguments[1]) * 2;
+                }
+
+                throw new InvalidDataException($"Unknown function: '{name}'");
+            }
+        }
+
+        [TestMethod]
+        public void Functions()
+        {
+            var ctx = new MyFunctionContext();
+            Assert.AreEqual(Parser.Parse("rectArea(10,20)").Eval(ctx), 200);
+            Assert.AreEqual(Parser.Parse("rectPerimeter(10,20)").Eval(ctx), 60);
         }
     }
 }

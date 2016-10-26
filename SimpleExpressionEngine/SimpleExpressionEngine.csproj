@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="IContext.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="NodeFunctionCall.cs" />
     <Compile Include="NodeVariable.cs" />
     <Compile Include="NodeUnary.cs" />
     <Compile Include="NodeBinary.cs" />
