@@ -130,6 +130,8 @@ namespace SimpleExpressionEngine
                 _currentToken = Token.Identifier;
                 return;
             }
+
+            throw new InvalidDataException($"Unexpected character: {_currentChar}");
         }
     }
 }
