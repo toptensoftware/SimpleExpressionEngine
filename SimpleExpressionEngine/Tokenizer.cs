@@ -85,6 +85,8 @@ namespace SimpleExpressionEngine
                 _currentToken = Token.Number;
                 return;
             }
+
+            throw new InvalidDataException($"Unexpected character: {_currentChar}");
         }
     }
 }
