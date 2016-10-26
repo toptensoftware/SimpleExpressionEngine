@@ -61,6 +61,26 @@ namespace SimpleExpressionEngine
                     NextChar();
                     _currentToken = Token.Subtract;
                     return;
+
+                case '*':
+                    NextChar();
+                    _currentToken = Token.Multiply;
+                    return;
+
+                case '/':
+                    NextChar();
+                    _currentToken = Token.Divide;
+                    return;
+
+                case '(':
+                    NextChar();
+                    _currentToken = Token.OpenParens;
+                    return;
+
+                case ')':
+                    NextChar();
+                    _currentToken = Token.CloseParens;
+                    return;
             }
 
             // Number?

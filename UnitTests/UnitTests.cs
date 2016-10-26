@@ -69,5 +69,34 @@ namespace UnitTests
             // All together now
             Assert.AreEqual(Parser.Parse("10 + -20 - +30").Eval(), -40);
         }
+
+        [TestMethod]
+        public void MultiplyDivideTest()
+        {
+            // Add 
+            Assert.AreEqual(Parser.Parse("10 * 20").Eval(), 200);
+
+            // Subtract 
+            Assert.AreEqual(Parser.Parse("10 / 20").Eval(), 0.5);
+
+            // Sequence
+            Assert.AreEqual(Parser.Parse("10 * 20 / 50").Eval(), 4);
+        }
+
+        [TestMethod]
+        public void OrderOfOperation()
+        {
+            // No parens
+            Assert.AreEqual(Parser.Parse("10 + 20 * 30").Eval(), 610);
+
+            // Parens
+            Assert.AreEqual(Parser.Parse("(10 + 20) * 30").Eval(), 900);
+
+            // Parens and negative
+            Assert.AreEqual(Parser.Parse("-(10 + 20) * 30").Eval(), -900);
+
+            // Nested
+            Assert.AreEqual(Parser.Parse("-((10 + 20) * 5) * 30").Eval(), -4500);
+        }
     }
 }

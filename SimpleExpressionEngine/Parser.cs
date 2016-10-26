@@ -30,7 +30,7 @@ namespace SimpleExpressionEngine
         Node ParseAddSubtract()
         {
             // Parse the left hand side
-            var lhs = ParseUnary();
+            var lhs = ParseMultiplyDivide();
 
             while (true)
             {
@@ -53,12 +53,47 @@ namespace SimpleExpressionEngine
                 _tokenizer.NextToken();
 
                 // Parse the right hand side of the expression
+                var rhs = ParseMultiplyDivide();
+
+                // Create a binary node and use it as the left-hand side from now on
+                lhs = new NodeBinary(lhs, rhs, op);
+            }
+        }
+
+        // Parse an sequence of add/subtract operators
+        Node ParseMultiplyDivide()
+        {
+            // Parse the left hand side
+            var lhs = ParseUnary();
+
+            while (true)
+            {
+                // Work out the operator
+                Func<double, double, double> op = null;
+                if (_tokenizer.Token == Token.Multiply)
+                {
+                    op = (a, b) => a * b;
+                }
+                else if (_tokenizer.Token == Token.Divide)
+                {
+                    op = (a, b) => a / b;
+                }
+
+                // Binary operator found?
+                if (op == null)
+                    return lhs;             // no
+
+                // Skip the operator
+                _tokenizer.NextToken();
+
+                // Parse the right hand side of the expression
                 var rhs = ParseUnary();
 
                 // Create a binary node and use it as the left-hand side from now on
                 lhs = new NodeBinary(lhs, rhs, op);
             }
         }
+
 
         // Parse a unary operator (eg: negative/positive)
         Node ParseUnary()
@@ -101,6 +136,24 @@ namespace SimpleExpressionEngine
             {
                 var node = new NodeNumber(_tokenizer.Number);
                 _tokenizer.NextToken();
+                return node;
+            }
+
+            // Parenthesis?
+            if (_tokenizer.Token == Token.OpenParens)
+            {
+                // Skip '('
+                _tokenizer.NextToken();
+
+                // Parse a top-level expression
+                var node = ParseAddSubtract();
+
+                // Check and skip ')'
+                if (_tokenizer.Token != Token.CloseParens)
+                    throw new SyntaxException("Missing close parenthesis");
+                _tokenizer.NextToken();
+
+                // Return
                 return node;
             }
 

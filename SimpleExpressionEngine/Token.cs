@@ -5,6 +5,10 @@
         EOF,
         Add,
         Subtract,
+        Multiply,
+        Divide,
+        OpenParens,
+        CloseParens,
         Number,
     }
 }
