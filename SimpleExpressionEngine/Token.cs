@@ -9,6 +9,7 @@
         Divide,
         OpenParens,
         CloseParens,
+        Identifier,
         Number,
     }
 }

@@ -16,10 +16,10 @@ namespace SimpleExpressionEngine
         Node _rhs;                              // Right hand side of the operation
         Func<double, double> _op;               // The callback operator
 
-        public override double Eval()
+        public override double Eval(IContext ctx)
         {
             // Evaluate RHS
-            var rhsVal = _rhs.Eval();
+            var rhsVal = _rhs.Eval(ctx);
 
             // Evaluate and return
             var result = _op(rhsVal);

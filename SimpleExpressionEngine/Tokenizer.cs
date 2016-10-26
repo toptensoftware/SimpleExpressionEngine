@@ -17,6 +17,7 @@ namespace SimpleExpressionEngine
         char _currentChar;
         Token _currentToken;
         double _number;
+        string _identifier;
 
         public Token Token
         {
@@ -26,6 +27,11 @@ namespace SimpleExpressionEngine
         public double Number
         {
             get { return _number; }
+        }
+
+        public string Identifier
+        {
+            get { return _identifier; }
         }
 
         // Read the next character from the input strem
@@ -99,6 +105,24 @@ namespace SimpleExpressionEngine
                 // Parse it
                 _number = double.Parse(sb.ToString(), CultureInfo.InvariantCulture);
                 _currentToken = Token.Number;
+                return;
+            }
+
+            // Identifier - starts with letter or underscore
+            if (char.IsLetter(_currentChar) || _currentChar == '_')
+            {
+                var sb = new StringBuilder();
+
+                // Accept letter, digit or underscore
+                while (char.IsLetterOrDigit(_currentChar) || _currentChar == '_')
+                {
+                    sb.Append(_currentChar);
+                    NextChar();
+                }
+
+                // Setup token
+                _identifier = sb.ToString();
+                _currentToken = Token.Identifier;
                 return;
             }
         }

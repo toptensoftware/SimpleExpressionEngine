@@ -157,6 +157,14 @@ namespace SimpleExpressionEngine
                 return node;
             }
 
+            // Variable
+            if (_tokenizer.Token == Token.Identifier)
+            {
+                var node = new NodeVariable(_tokenizer.Identifier);
+                _tokenizer.NextToken();
+                return node;
+            }
+
             // Don't Understand
             throw new SyntaxException($"Unexpect token: {_tokenizer.Token}");
         }

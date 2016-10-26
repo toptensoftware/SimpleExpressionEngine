@@ -42,61 +42,90 @@ namespace UnitTests
         public void AddSubtractTest()
         {
             // Add 
-            Assert.AreEqual(Parser.Parse("10 + 20").Eval(), 30);
+            Assert.AreEqual(Parser.Parse("10 + 20").Eval(null), 30);
 
             // Subtract 
-            Assert.AreEqual(Parser.Parse("10 - 20").Eval(), -10);
+            Assert.AreEqual(Parser.Parse("10 - 20").Eval(null), -10);
 
             // Sequence
-            Assert.AreEqual(Parser.Parse("10 + 20 - 40 + 100").Eval(), 90);
+            Assert.AreEqual(Parser.Parse("10 + 20 - 40 + 100").Eval(null), 90);
         }
 
         [TestMethod]
         public void UnaryTest()
         {
             // Negative
-            Assert.AreEqual(Parser.Parse("-10").Eval(), -10);
+            Assert.AreEqual(Parser.Parse("-10").Eval(null), -10);
 
             // Positive
-            Assert.AreEqual(Parser.Parse("+10").Eval(), 10);
+            Assert.AreEqual(Parser.Parse("+10").Eval(null), 10);
 
             // Negative of a negative
-            Assert.AreEqual(Parser.Parse("--10").Eval(), 10);
+            Assert.AreEqual(Parser.Parse("--10").Eval(null), 10);
 
             // Woah!
-            Assert.AreEqual(Parser.Parse("--++-+-10").Eval(), 10);
+            Assert.AreEqual(Parser.Parse("--++-+-10").Eval(null), 10);
 
             // All together now
-            Assert.AreEqual(Parser.Parse("10 + -20 - +30").Eval(), -40);
+            Assert.AreEqual(Parser.Parse("10 + -20 - +30").Eval(null), -40);
         }
 
         [TestMethod]
         public void MultiplyDivideTest()
         {
             // Add 
-            Assert.AreEqual(Parser.Parse("10 * 20").Eval(), 200);
+            Assert.AreEqual(Parser.Parse("10 * 20").Eval(null), 200);
 
             // Subtract 
-            Assert.AreEqual(Parser.Parse("10 / 20").Eval(), 0.5);
+            Assert.AreEqual(Parser.Parse("10 / 20").Eval(null), 0.5);
 
             // Sequence
-            Assert.AreEqual(Parser.Parse("10 * 20 / 50").Eval(), 4);
+            Assert.AreEqual(Parser.Parse("10 * 20 / 50").Eval(null), 4);
         }
 
         [TestMethod]
         public void OrderOfOperation()
         {
             // No parens
-            Assert.AreEqual(Parser.Parse("10 + 20 * 30").Eval(), 610);
+            Assert.AreEqual(Parser.Parse("10 + 20 * 30").Eval(null), 610);
 
             // Parens
-            Assert.AreEqual(Parser.Parse("(10 + 20) * 30").Eval(), 900);
+            Assert.AreEqual(Parser.Parse("(10 + 20) * 30").Eval(null), 900);
 
             // Parens and negative
-            Assert.AreEqual(Parser.Parse("-(10 + 20) * 30").Eval(), -900);
+            Assert.AreEqual(Parser.Parse("-(10 + 20) * 30").Eval(null), -900);
 
             // Nested
-            Assert.AreEqual(Parser.Parse("-((10 + 20) * 5) * 30").Eval(), -4500);
+            Assert.AreEqual(Parser.Parse("-((10 + 20) * 5) * 30").Eval(null), -4500);
+        }
+
+        class MyContext : IContext
+        {
+            public MyContext(double r)
+            {
+                _r = r;
+            }
+
+            double _r;
+
+            public double ResolveVariable(string name)
+            {
+                switch (name)
+                {
+                    case "pi": return Math.PI;
+                    case "r": return _r;
+                }
+
+                throw new InvalidDataException($"Unknown variable: '{name}'");
+            }
+        }
+
+        [TestMethod]
+        public void Variables()
+        {
+            var ctx = new MyContext(10);
+
+            Assert.AreEqual(Parser.Parse("2 * pi * r").Eval(ctx), 2 * Math.PI * 10);
         }
     }
 }

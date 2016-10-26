@@ -10,7 +10,7 @@
 
         double _number;             // The number
 
-        public override double Eval()
+        public override double Eval(IContext ctx)
         {
             // Just return it.  Too easy.
             return _number;
