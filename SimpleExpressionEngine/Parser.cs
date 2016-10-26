@@ -99,33 +99,30 @@ namespace SimpleExpressionEngine
         // Parse a unary operator (eg: negative/positive)
         Node ParseUnary()
         {
-            while (true)
+            // Positive operator is a no-op so just skip it
+            if (_tokenizer.Token == Token.Add)
             {
-                // Positive operator is a no-op so just skip it
-                if (_tokenizer.Token == Token.Add)
-                {
-                    // Skip
-                    _tokenizer.NextToken();
-                    continue;
-                }
-
-                // Negative operator
-                if (_tokenizer.Token == Token.Subtract)
-                {
-                    // Skip
-                    _tokenizer.NextToken();
-
-                    // Parse RHS 
-                    // Note this recurses to self to support negative of a negative
-                    var rhs = ParseUnary();
-
-                    // Create unary node
-                    return new NodeUnary(rhs, (a) => -a);
-                }
-
-                // No positive/negative operator so parse a leaf node
-                return ParseLeaf();
+                // Skip
+                _tokenizer.NextToken();
+                return ParseUnary();
             }
+
+            // Negative operator
+            if (_tokenizer.Token == Token.Subtract)
+            {
+                // Skip
+                _tokenizer.NextToken();
+
+                // Parse RHS 
+                // Note this recurses to self to support negative of a negative
+                var rhs = ParseUnary();
+
+                // Create unary node
+                return new NodeUnary(rhs, (a) => -a);
+            }
+
+            // No positive/negative operator so parse a leaf node
+            return ParseLeaf();
         }
 
         // Parse a leaf node
