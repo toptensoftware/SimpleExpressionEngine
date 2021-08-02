@@ -80,9 +80,12 @@ namespace SimpleExpressionEngine
         #region Convenience Helpers
         
         // Static helper to parse a string
-        public static Node Parse(string str)
+        public static Node Parse(string input)
         {
-            return Parse(new Tokenizer(new StringReader(str)));
+            using (StringReader reader = new StringReader(input))
+            {
+                return Parse(new Tokenizer(reader));
+            }
         }
 
         // Static helper to parse from a tokenizer
